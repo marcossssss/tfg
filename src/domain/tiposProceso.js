@@ -1,0 +1,6 @@
+export const TIPOS_PROCESO = Object.freeze({
+  ISOTERMO: "ISOTERMO",
+  ISOBARO: "ISOBARO",
+  ISOCORO: "ISOCORO",
+  ADIABATICO: "ADIABATICO"
+});
