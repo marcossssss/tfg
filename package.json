@@ -1,0 +1,30 @@
+{
+  "name": "tfg-1",
+  "version": "1.0.0",
+  "description": "Simulador de procesos termodinámicos",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcossssss/tfg.git"
+  },
+  "keywords": [
+    "termodinamica",
+    "nodejs",
+    "express",
+    "simulacion"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcossssss/tfg/issues"
+  },
+  "homepage": "https://github.com/marcossssss/tfg#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
