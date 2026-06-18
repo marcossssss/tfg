@@ -6,16 +6,22 @@ export function crearEstado({ presion, volumen, temperatura }) {
   };
 }
 
-export function crearProceso({ tipoProceso, estadoInicial, estadoFinal }) {
+export function crearProceso({
+  tipoProceso,
+  estadoInicial,
+  estadoFinal
+}) {
   return {
     tipoProceso,
     estadoInicial,
-    estadoFinal,
-    resultado: null
+    estadoFinal
   };
 }
 
-export function crearSimulacion({ nombre, procesos = [] }) {
+export function crearSimulacion({
+  nombre,
+  procesos = []
+}) {
   return {
     nombre,
     fechaCreacion: new Date(),
