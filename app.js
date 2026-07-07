@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", calculoRoutes);
 app.use("/api", simulacionRoutes);
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.json({

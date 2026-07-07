@@ -2,10 +2,46 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>TermoSim</title>
+  <title>Simulador termodinámico</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>TermoSim</h1>
-  <p>Backend funcionando con Node.js + Express.</p>
+  <main class="container">
+    <h1>Simulador termodinámico</h1>
+
+    <section class="card">
+      <h2>Datos del proceso</h2>
+
+      <label>Tipo de proceso</label>
+      <select id="tipoProceso">
+        <option value="ISOTERMO">Isotermo</option>
+        <option value="ISOBARO">Isóbaro</option>
+        <option value="ISOCORO">Isócoro</option>
+        <option value="ADIABATICO">Adiabático</option>
+      </select>
+
+      <label>Moles</label>
+      <input id="moles" type="number" value="1" />
+
+      <h3>Estado inicial</h3>
+      <input id="p1" type="number" placeholder="Presión inicial (Pa)" />
+      <input id="v1" type="number" placeholder="Volumen inicial (m³)" />
+      <input id="t1" type="number" placeholder="Temperatura inicial (K)" />
+
+      <h3>Estado final</h3>
+      <input id="p2" type="number" placeholder="Presión final (Pa)" />
+      <input id="v2" type="number" placeholder="Volumen final (m³)" />
+      <input id="t2" type="number" placeholder="Temperatura final (K)" />
+
+      <button id="calcularBtn">Calcular</button>
+    </section>
+
+    <section class="card">
+      <h2>Resultado</h2>
+      <pre id="resultado">Introduce datos y pulsa calcular.</pre>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
