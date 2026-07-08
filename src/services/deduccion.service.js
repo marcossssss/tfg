@@ -85,7 +85,7 @@ function validarProcesoCompleto(datos) {
 
   if (camposFaltantes.length > 0) {
     throw new Error(
-      `Información insuficiente. Faltan como mínimo: ${camposFaltantes.join(", ")}.`
+      `Información insuficiente. Introduce alguno de los siguientes datos: ${camposFaltantes.join(", ")}.`
     );
   }
 }
