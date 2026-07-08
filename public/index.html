@@ -34,12 +34,26 @@
       <input id="t2" type="number" placeholder="Temperatura final (K)" />
 
       <button id="calcularBtn">Calcular</button>
+      <button id="agregarProcesoBtn">Añadir proceso a simulación</button>
+      <button id="ejecutarSimulacionBtn">Ejecutar simulación</button>
     </section>
 
     <section class="card">
       <h2>Resultado</h2>
       <pre id="resultado">Introduce datos y pulsa calcular.</pre>
     </section>
+
+    <section class="card">
+      <h2>Simulación</h2>
+
+      <p>Procesos añadidos:</p>
+
+      <ul id="listaProcesos">
+      <li>No hay procesos añadidos.</li>
+      </ul>
+
+      <div id="resultadoSimulacion"></div>
+   </section>
   </main>
 
   <script src="script.js"></script>

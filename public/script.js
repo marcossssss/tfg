@@ -1,7 +1,88 @@
+let procesosSimulacion = [];
+
 document.getElementById("calcularBtn").addEventListener("click", async () => {
-  const datos = {
+  const data = await calcularProcesoActual();
+
+  if (!data) return;
+
+  rellenarCamposDeducidos(leerDatosFormulario(), data.datosCompletos);
+  mostrarResultado(data.resultado);
+});
+
+document.getElementById("agregarProcesoBtn").addEventListener("click", async () => {
+  const data = await calcularProcesoActual();
+
+  if (!data) return;
+
+  procesosSimulacion.push(data.datosCompletos);
+  rellenarCamposDeducidos(leerDatosFormulario(), data.datosCompletos);
+  mostrarResultado(data.resultado);
+  actualizarListaProcesos();
+});
+
+document.getElementById("ejecutarSimulacionBtn").addEventListener("click", async () => {
+  if (procesosSimulacion.length === 0) {
+    mostrarError("No hay procesos añadidos a la simulación.");
+    return;
+  }
+
+  try {
+    const respuesta = await fetch("/api/simulacion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nombre: "Simulación web",
+        procesos: procesosSimulacion
+      })
+    });
+
+    const data = await respuesta.json();
+
+    if (data.error) {
+      mostrarError(data.error);
+      return;
+    }
+
+    mostrarResultadoSimulacion(data);
+
+  } catch (error) {
+    mostrarError("Error al ejecutar la simulación.");
+  }
+});
+
+async function calcularProcesoActual() {
+  try {
+    const datos = leerDatosFormulario();
+
+    const respuesta = await fetch("/api/calcular", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const data = await respuesta.json();
+
+    if (!data.ok) {
+      mostrarError(data.error);
+      return null;
+    }
+
+    return data;
+
+  } catch (error) {
+    mostrarError("Error al conectar con el servidor.");
+    return null;
+  }
+}
+
+function leerDatosFormulario() {
+  return {
     tipoProceso: document.getElementById("tipoProceso").value,
-    moles: Number(document.getElementById("moles").value),
+    moles: leerNumero("moles"),
     estadoInicial: {
       presion: leerNumero("p1"),
       volumen: leerNumero("v1"),
@@ -13,28 +94,7 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
       temperatura: leerNumero("t2")
     }
   };
-
-  try {
-    const respuesta = await fetch("/api/calcular", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datos)
-    });
-
-    const data = await respuesta.json();
-
-    if (!data.ok) {
-      mostrarError(data.error);
-      return;
-    }
-
-    rellenarCamposDeducidos(datos, data.datosCompletos);
-    mostrarResultado(data.resultado);
-
-  } catch (error) {
-    mostrarError("Error al conectar con el servidor.");
-  }
-});
+}
 
 function leerNumero(id) {
   const valor = document.getElementById(id).value;
@@ -49,13 +109,45 @@ function mostrarError(mensaje) {
 
 function mostrarResultado(resultado) {
   document.getElementById("resultado").innerHTML = `
-    <div>
-      <h3>Resultados del proceso</h3>
-      <p><strong>Tipo:</strong> ${resultado.tipoProceso}</p>
-      <p><strong>Trabajo:</strong> ${resultado.trabajo.toFixed(2)} J</p>
-      <p><strong>Calor:</strong> ${resultado.calor.toFixed(2)} J</p>
-      <p><strong>Variación de energía interna:</strong> ${resultado.variacionEnergiaInterna.toFixed(2)} J</p>
-    </div>
+    <h3>Resultados del proceso</h3>
+    <p><strong>Tipo:</strong> ${resultado.tipoProceso}</p>
+    <p><strong>Trabajo:</strong> ${resultado.trabajo.toFixed(2)} J</p>
+    <p><strong>Calor:</strong> ${resultado.calor.toFixed(2)} J</p>
+    <p><strong>Variación energía interna:</strong> ${resultado.variacionEnergiaInterna.toFixed(2)} J</p>
+  `;
+}
+
+function actualizarListaProcesos() {
+  const lista = document.getElementById("listaProcesos");
+
+  lista.innerHTML = "";
+
+  procesosSimulacion.forEach((proceso, index) => {
+    const item = document.createElement("li");
+    item.textContent = `Proceso ${index + 1}: ${proceso.tipoProceso}`;
+    lista.appendChild(item);
+  });
+}
+
+function mostrarResultadoSimulacion(simulacion) {
+  const contenedor = document.getElementById("resultadoSimulacion");
+
+  let trabajoTotal = 0;
+  let calorTotal = 0;
+  let energiaTotal = 0;
+
+  simulacion.resultados.forEach(resultado => {
+    trabajoTotal += resultado.trabajo;
+    calorTotal += resultado.calor;
+    energiaTotal += resultado.variacionEnergiaInterna;
+  });
+
+  contenedor.innerHTML = `
+    <h3>Resultado de la simulación</h3>
+    <p><strong>Número de procesos:</strong> ${simulacion.numeroProcesos}</p>
+    <p><strong>Trabajo total:</strong> ${trabajoTotal.toFixed(2)} J</p>
+    <p><strong>Calor total:</strong> ${calorTotal.toFixed(2)} J</p>
+    <p><strong>ΔU total:</strong> ${energiaTotal.toFixed(2)} J</p>
   `;
 }
 
